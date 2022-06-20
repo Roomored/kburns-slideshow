@@ -1,7 +1,7 @@
 {
-    "ffmpeg": "ffmpeg.exe",
-    "ffprobe": "ffprobe.exe",
-    "aubio": "aubioonset.exe",
+    "ffmpeg": "ffmpeg",
+    "ffprobe": "ffprobe",
+    "aubio": "aubioonset",
 
     "IMAGE_EXTENSIONS": ["jpg", "jpeg", "png"],
     "VIDEO_EXTENSIONS": ["mp4", "mpg", "avi"],
