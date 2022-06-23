@@ -28,11 +28,11 @@ if __name__ == "__main__":
     work_directory_path = pathlib.Path("../temp/kburns")
 
     config.update({
-        "output_width": 1024,
-        "output_height": 768,
-        "output_codec": "",
-        "output_parameters": "",
-        "slide_duration": 8,
+        "output_width": 1280,
+        "output_height": 800,
+        "output_codec": "libx264",
+        "output_parameters": "-preset veryslow -tune stillimage -qp 20",
+        "slide_duration": 5,
         "slide_duration_min": 1,
         "fade_duration": 1.0,
         "transition_bars_count": 10,
@@ -40,27 +40,50 @@ if __name__ == "__main__":
         "fps": 30,
         "overwrite": True,
         "temp_file_folder": str(work_directory_path / "temp"),
-        "generate_temp": True
+        "generate_temp": True,
     })
 
     transitions = [package_name for importer, package_name, _ in pkgutil.iter_modules(["transitions"])]
 
+    input_files = []
 
-    input_files = [
-        {
-            "file": str(input_file_path.absolute()),
-            "transition": "fade",
-            "overlay_text": {
-                "title": f"Image {index}",
-                "font": "Helvetica",
-                "font_size": 32,
-                "duration": 8,
-                "offset": 0,
+    for room_folder in sorted(
+        (work_directory_path / "script").iterdir(),
+        key=lambda path: path.name
+    ):
+        if not room_folder.is_dir():
+            continue
+
+        room_name = room_folder.name.split(" - ")[1]
+
+        title_shown = False
+
+        for camera_folder in sorted(
+            room_folder.iterdir(),
+            key=lambda path: path.name
+        ):
+
+            if not camera_folder.is_dir():
+                continue
+
+            image_file = list(camera_folder.iterdir())[0]
+
+            spec = {
+                "file": str(image_file.absolute()),
+                "transition": "fade"
             }
-        }
-        for index, input_file_path in enumerate(work_directory_path.glob("*.jpeg"))
-    ]
 
-    sm = SlideManager(config, input_files, [])
+            if not title_shown:
+                title_shown = True
+                spec["overlay_text"] = {
+                    "title": room_name,
+                    "font": "Helvetica",
+                    "font_size": 32,
+                    "duration": 5,
+                }
+
+            input_files.append(spec)
+
+    sm = SlideManager(config, input_files, [ str(work_directory_path / "174_full_out-in-the-open-no-vocal-version_0151.mp3") ])
 
     sm.createVideo(str(work_directory_path / "test.mp4"))

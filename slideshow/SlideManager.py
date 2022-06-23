@@ -384,11 +384,13 @@ class SlideManager:
                 elif transition_y == "bottom-to-top":
                     y = "'main_h-(((main_h+text_h)/%s)*(t-%s))'" % (text_duration, text_offset)
 
-                x = "'50'"
+                x = "'0'"
                 y = "'main_h - 75'"
 
-                filters.append("drawtext=text='%s':line_spacing=20:fontsize=%s: "
-                               "fontcolor=%s:y=%s:x=%s:borderw=1%s%s:enable='between(t,%s,%s)':box=1:boxcolor='4e89a7':boxborderw=20:alpha='if(lt(t,2),t/2,if(lt(t,4),1,if(lt(t, 6),1-(t-4)/2,0)))'"
+                filters.append("drawtext=text='       %s':line_spacing=20:fontsize=%s:"
+                               "fontcolor=%s:y=%s:x=%s%s%s:enable='between(t,%s,%s)':"
+                               "box=1:boxcolor='4e89a7':boxborderw=20:"
+                               "alpha='if(lt(t,1),t,if(lt(t,3),1,if(lt(t,5),1-(t-3)/2,0)))'"
                                % (text,
                                   font_size,
                                   font_color,
@@ -397,7 +399,7 @@ class SlideManager:
                                   font,
                                   font_file,
                                   text_offset,
-                                  text_offset + text_duration
+                                  text_offset + text_duration,
                                   )
                                )
 
